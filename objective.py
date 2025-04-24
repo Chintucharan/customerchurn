@@ -55,4 +55,4 @@ def objective_insights_module(df):
     Churn is slightly higher among female customers and those in France.
     Salaries are also a factor and lower earners tends to churn more.
     """)
-    #press 2 to to view the objectives
+    #press 2 to to view the objectives 
