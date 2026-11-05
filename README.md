@@ -33,9 +33,9 @@ Acquiring a new customer costs far more than keeping an existing one. This proje
 1. **Data loading & inspection** – `read_csv`, `head()`, `info()`
 2. **Data quality checks** – null values, duplicates
 3. **Descriptive statistics** – `describe()`
-4. **Correlation & covariance** – heatmap of numeric features vs `Exited`
-5. **Outlier detection** – boxplots on Balance, CreditScore, Age
-6. **Relationship exploration** – pairplot (500-row sample)
+4. **Correlation & covariance** – heatmap of all numeric features; covariance of CreditScore, Age, Balance, EstimatedSalary
+5. **Outlier detection** – horizontal boxplots on CreditScore, Age, Balance
+6. **Relationship exploration** – pairplot of CreditScore, Age, Balance, EstimatedSalary coloured by `Exited` (500-row sample)
 7. **Objective-based analysis** – 5 business questions (below)
 8. **Churn prediction** – logistic regression & decision tree baseline
 
@@ -51,41 +51,6 @@ Acquiring a new customer costs far more than keeping an existing one. This proje
 
 **Churn rate** = `Exited customers ÷ Total customers × 100`
 
-## 🖼️ Visualizations
-
-### Exploratory Data Analysis
-| Correlation Heatmap | Outlier Detection (Boxplots) |
-|---|---|
-| ![Correlation heatmap](images/correlation_heatmap.png) | ![Boxplots](images/boxplots_outliers.png) |
-
-![Pairplot of key features](images/pairplot.png)
-
-### Objective 1 – Age, Balance & Credit Score
-| Age Group vs Churn Rate | Balance: Churned vs Retained |
-|---|---|
-| ![Age group churn](images/obj1_age_churn.png) | ![Balance boxplot](images/obj1_balance_boxplot.png) |
-
-![Credit score distribution by churn](images/obj1_credit_score_hist.png)
-
-### Objective 2 – Gender & Geography
-| Churn by Gender | Churn Rate by Country |
-|---|---|
-| ![Gender churn](images/obj2_gender_countplot.png) | ![Geography churn](images/obj2_geography_barplot.png) |
-
-### Objective 3 – Salary & Product Usage
-| Salary vs Churn | Number of Products vs Churn |
-|---|---|
-| ![Salary boxplot](images/obj3_salary_boxplot.png) | ![Products countplot](images/obj3_products_countplot.png) |
-
-### Objective 4 – Tenure, Activity & Credit Card
-| Tenure vs Churn Rate | Active Membership | Credit Card Ownership |
-|---|---|---|
-| ![Tenure line plot](images/obj4_tenure_lineplot.png) | ![Activity countplot](images/obj4_activity_countplot.png) | ![Credit card countplot](images/obj4_creditcard_countplot.png) |
-
-### Objective 5 – Churn Prediction
-| Feature Importance | ROC Curve |
-|---|---|
-| ![Feature importance](images/obj5_feature_importance.png) | ![ROC curve](images/obj5_roc_curve.png) |
 
 ## 📊 Key Findings
 
@@ -114,17 +79,17 @@ Acquiring a new customer costs far more than keeping an existing one. This proje
 git clone https://github.com/Chintucharan/customerchurn.git
 cd customerchurn
 pip install pandas numpy matplotlib seaborn scikit-learn jupyter
-jupyter notebook
+python churn_eda.py
 ```
 
-Place `Bank_Churn.csv` in the project folder and run the notebook top to bottom.
+Place `Bank_Churn.csv` in the project folder first. The EDA script prints null/duplicate checks and the covariance matrix, and displays the heatmap, boxplot and pairplot. The objective-based analysis and churn model are in `churn_analysis.ipynb`.
 
 ## 📁 Repository Structure
 
 ```
 ├── Bank_Churn.csv
-├── churn_analysis.ipynb
-├── images/              # exported charts
+├── churn_eda.py         # Module 1: EDA
+├── churn_analysis.ipynb # Module 2: objective-based analysis & model
 ├── README.md
 └── report.pdf
 ```
