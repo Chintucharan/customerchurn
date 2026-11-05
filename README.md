@@ -1,77 +1,85 @@
 # 🏦 Bank Customer Churn Analysis
 
-> End-to-end exploratory analysis of 10,000 bank customers to find **who leaves, why, and which segments to target first** with retention campaigns.
+**Python · Pandas · NumPy · Matplotlib · Seaborn · scikit-learn**
 
-**Tools:** Python · Pandas · NumPy · Matplotlib · Seaborn · scikit-learn · Jupyter
-**Dataset:** [Maven Analytics – Bank Churn](https://mavenanalytics.io/data-playground) (10,000 customers, 14 columns)
-**Context:** INT375 – Data Science Toolbox: Python Programming, Lovely Professional University (Jan–Apr 2025)
+An end-to-end analysis of 10,000 bank customers to understand **who churns, why, and which segments the bank should target first**. The project covers data cleaning, exploratory analysis, five business-driven questions, a baseline prediction model, and actionable retention recommendations.
+
 **Author:** Gowni Venkat Charan · [LinkedIn](https://www.linkedin.com/in/gowni-venkat-charan-1b06562a8) · [GitHub](https://github.com/Chintucharan/customerchurn)
 
 ---
 
 ## 📌 Business Problem
 
-Acquiring a new customer costs far more than keeping an existing one. This project answers:
+Retaining a customer is cheaper than acquiring a new one. This analysis answers:
 
-1. Which customers are most likely to churn?
+1. Which customer segments are most likely to leave?
 2. How do age, geography, gender, balance and credit score relate to churn?
-3. Do product usage and engagement (active membership, tenure, credit card) predict churn?
-4. Can churn risk be predicted, and what should the bank do about it?
+3. Do product holdings and engagement (activity, tenure, credit card) signal risk?
+4. Can churn be predicted well enough to act on it?
 
 ## 🗂️ Dataset
+
+Source: [Maven Analytics – Bank Churn](https://mavenanalytics.io/data-playground) · **10,000 rows × 14 columns** · overall churn rate ≈ **20%**
 
 | Group | Columns |
 |---|---|
 | Identifiers | `RowNumber`, `CustomerId`, `Surname` |
-| Demographics | `Age`, `Gender`, `Geography` (France / Germany / Spain) |
+| Demographics | `Age`, `Gender`, `Geography` (France, Germany, Spain) |
 | Financial | `CreditScore`, `Balance`, `EstimatedSalary` |
 | Behavioral | `Tenure`, `NumOfProducts`, `HasCrCard`, `IsActiveMember` |
 | Target | `Exited` (1 = churned, 0 = retained) |
 
-## 🔧 Workflow
+## 🔧 Approach
 
-1. **Data loading & inspection** – `read_csv`, `head()`, `info()`
-2. **Data quality checks** – null values, duplicates
-3. **Descriptive statistics** – `describe()`
-4. **Correlation & covariance** – heatmap of all numeric features; covariance of CreditScore, Age, Balance, EstimatedSalary
-5. **Outlier detection** – horizontal boxplots on CreditScore, Age, Balance
-6. **Relationship exploration** – pairplot of CreditScore, Age, Balance, EstimatedSalary coloured by `Exited` (500-row sample)
-7. **Objective-based analysis** – 5 business questions (below)
-8. **Churn prediction** – logistic regression & decision tree baseline
+1. **Data quality** – checked nulls and duplicates (no missing values found)
+2. **Descriptive statistics** – mean age ≈ 39, mean balance ≈ 76K, credit scores 350–850
+3. **Correlation & covariance** – heatmap of numeric features; covariance of CreditScore, Age, Balance, EstimatedSalary
+4. **Outlier detection** – boxplots of CreditScore, Age, Balance
+5. **Relationship exploration** – pairplot (500-row sample) coloured by `Exited`
+6. **Objective-based analysis** – five business questions (below)
+7. **Modelling** – logistic regression and decision tree baselines
 
-## 🔍 Analysis Objectives
+**Churn rate** = `churned customers ÷ total customers × 100`
 
-| # | Objective | Techniques | Visuals |
-|---|---|---|---|
-| 1 | Churn by age, balance, credit score | `pd.cut()` age bins, `groupby().mean()` | Bar chart, boxplot, histogram |
-| 2 | Churn by gender & geography | `groupby()['Exited'].mean()` | Countplot, bar chart |
-| 3 | Salary & product usage: churned vs. loyal | `groupby()`, `value_counts()` | Boxplot, countplot |
-| 4 | Tenure, activity status, credit card | Filtering, churn-rate formulas | Line plot, countplots |
-| 5 | Predict churn risk | Logistic regression, decision tree | Feature importance, ROC curve |
+## 🔍 Objectives & Methods
 
-**Churn rate** = `Exited customers ÷ Total customers × 100`
-
+| # | Question | Methods |
+|---|---|---|
+| 1 | How do age, balance and credit score relate to churn? | `pd.cut()` age bands, `groupby().mean()`, boxplots, histograms |
+| 2 | Does churn differ by gender and country? | `groupby()['Exited'].mean()`, countplot, barplot |
+| 3 | Do salary and product usage differ for churned vs. retained customers? | `groupby()`, `value_counts()`, boxplot, countplot |
+| 4 | Do tenure, activity status and credit card ownership matter? | Filtered churn rates, line plot, countplots |
+| 5 | Can churn risk be predicted? | Logistic regression, decision tree, feature importance, ROC curve |
 
 ## 📊 Key Findings
 
-> ⚠️ Fill in the exact figures from your notebook output before publishing (see *Verify before publishing* below).
+| Factor | Finding |
+|---|---|
+| **Age** | The strongest numeric signal (correlation with churn ≈ 0.29). Churn is highest for customers in their 50s (over half leave) and much lower under 35. |
+| **Geography** | Germany churns most (≈ 32%), roughly double France (≈ 16%) and Spain (≈ 17%). |
+| **Gender** | Female customers churn more (≈ 25%) than male customers (≈ 16%). |
+| **Activity** | Inactive members churn at ≈ 27% vs ≈ 14% for active members. |
+| **Products** | Customers with 2 products are the most loyal (≈ 8% churn). Those with 1 product churn ≈ 28%, and those with 3–4 products churn at very high rates (small group). |
+| **Balance** | Churned customers hold higher average balances (≈ 91K vs ≈ 73K), so the bank is losing valuable accounts. |
+| **Credit score, salary, credit card, tenure** | Little to no meaningful difference between churned and retained customers. |
+| **Prediction** | Baseline models reach roughly 85% accuracy. About 80% of customers do not churn, so accuracy alone is misleading and recall/ROC-AUC matter more. |
 
-- **Age is the strongest single driver.** Churn rises sharply through the 40s and 50s; older customers are far more likely to leave than customers under 35.
-- **Inactive members churn at roughly twice the rate** of active members → engagement is a leading indicator.
-- **Geography matters.** Compare France, Germany and Spain churn rates from your output: `France __%`, `Germany __%`, `Spain __%`.
-- **Gender gap:** female customers churn at a higher rate than male customers (`__%` vs `__%`).
-- **Product count is non-linear.** Customers with 1 product and customers with 3+ products behave very differently from those with 2 → check `groupby('NumOfProducts')['Exited'].mean()`.
-- **Balance:** churned customers hold higher average balances, meaning the bank is losing high-value customers.
-- **Salary and credit card ownership** show little difference between churned and retained groups.
-- **Baseline model accuracy ≈ 85%**; report precision, recall and ROC-AUC as well, since only ~20% of customers churn.
+> Figures are rounded and come from the analysis in this repository; rerun the code to reproduce them.
 
 ## 💡 Recommendations
 
-1. Launch retention outreach for **inactive customers aged 40+** with high balances.
-2. Create engagement triggers (offers, calls) for customers whose activity drops.
-3. Review the product bundle for customers with 1 or 3+ products.
-4. Investigate the highest-churn country for local service or pricing issues.
-5. Score customers monthly with the churn model and prioritise by balance × risk.
+1. **Target inactive customers aged 40+** with personalised outreach before they leave.
+2. **Investigate the German market** (service quality, pricing, competition) given its much higher churn.
+3. **Re-engage 1-product customers** with a second product, since 2-product customers are the most loyal.
+4. **Review the 3–4 product bundles**, as customers with many products churn unusually often.
+5. **Prioritise high-balance, high-risk customers** using model scores for retention budget.
+6. **Monitor activity drops monthly** as an early-warning signal.
+
+## ⚠️ Limitations
+
+- Snapshot data with no transaction history, complaints or time dimension, so causes of churn can only be inferred.
+- Churn is imbalanced (~20%); future work should use class weighting/SMOTE and report precision, recall and F1.
+- Correlation is not causation; findings show association, not proven drivers.
 
 ## 🚀 How to Run
 
@@ -82,30 +90,28 @@ pip install pandas numpy matplotlib seaborn scikit-learn jupyter
 python churn_eda.py
 ```
 
-Place `Bank_Churn.csv` in the project folder first. The EDA script prints null/duplicate checks and the covariance matrix, and displays the heatmap, boxplot and pairplot. The objective-based analysis and churn model are in `churn_analysis.ipynb`.
+Place `Bank_Churn.csv` in the project folder first. The EDA script prints null/duplicate checks and the covariance matrix, then displays the heatmap, boxplots and pairplot. The objective-based analysis and model are in `churn_analysis.ipynb`.
 
 ## 📁 Repository Structure
 
 ```
 ├── Bank_Churn.csv
-├── churn_eda.py         # Module 1: EDA
-├── churn_analysis.ipynb # Module 2: objective-based analysis & model
-├── README.md
-└── report.pdf
+├── churn_eda.py          # Module 1: EDA
+├── churn_analysis.ipynb  # Module 2: objective-based analysis & model
+└── README.md
 ```
 
 ## 🔮 Future Work
 
-- Real-time churn scoring with live account activity
-- Customer segmentation (e.g., "high-value but at-risk") using clustering
+- Real-time churn scoring from live account activity
+- Customer segmentation (e.g., "high-value but at-risk") with clustering
+- Gradient boosting models with proper imbalance handling
 - Interactive Tableau / Power BI dashboard
-- Cross-sell and upsell targeting
-- Sentiment analysis on complaints and feedback
-- Class-imbalance handling (SMOTE, class weights) and gradient boosting models
+- Sentiment analysis of complaints and feedback
 
 ## 🧠 Skills Demonstrated
 
-`Data cleaning` · `EDA` · `Statistical analysis` · `Data visualization` · `Feature analysis` · `Churn / KPI metrics` · `Classification modelling` · `Business storytelling`
+Data cleaning · EDA · Statistical analysis · Data visualization · Churn/KPI metrics · Classification modelling · Business storytelling
 
 ## 👤 Author
 
